@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Satya Saketh Bollepally — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#0a0a0a;--white:#ffffff;--gray:#555555;
+  --gray2:#1e1e1e;--gray3:#888888;--border:#222222;
+  --font-display:'Barlow Condensed',sans-serif;
+  --font-mono:'Space Mono',monospace;
+  --font-body:'Inter',sans-serif;
+  --sidebar-w:60px;
+}
+body{background:var(--bg);color:var(--white);font-family:var(--font-body);overflow-x:hidden}
+body.custom-cursor,body.custom-cursor *{cursor:none!important}
+a{color:inherit;text-decoration:none}
+
+/* CURSOR */
+#cur-dot,#cur-ring{
+  position:fixed;top:0;left:0;border-radius:50%;
+  pointer-events:none;z-index:99999;
+}
+#cur-dot{width:6px;height:6px;background:var(--white)}
+#cur-ring{
+  width:32px;height:32px;
+  border:1.5px solid rgba(255,255,255,.55);
+  transition:width .18s,height .18s,border-color .18s;
+}
+#cur-ring.hov{width:48px;height:48px;border-color:var(--white)}
+body:not(.custom-cursor) #cur-dot,
+body:not(.custom-cursor) #cur-ring{display:none}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:28px 0;z-index:200;border-right:1px solid var(--border);background:var(--bg);
+}
+.sidebar-logo{font-family:var(--font-display);font-weight:900;font-size:1.1rem;letter-spacing:.05em}
+.sidebar-nav{display:flex;flex-direction:column;align-items:center;gap:32px}
+.sidebar-nav a{
+  font-family:var(--font-mono);font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--gray3);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);
+  transition:color .2s;
+}
+.sidebar-nav a:hover,.sidebar-nav a.active{color:var(--white)}
+.sidebar-btm{
+  font-family:var(--font-mono);font-size:.5rem;letter-spacing:.2em;
+  color:var(--gray);writing-mode:vertical-rl;transform:rotate(180deg);text-transform:uppercase;
+}
+
+/* MOBILE NAV */
+.mob-nav{
+  display:none;position:fixed;top:0;left:0;right:0;height:56px;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  align-items:center;justify-content:space-between;padding:0 20px;z-index:300;
+}
+.mob-logo{font-family:var(--font-display);font-weight:900;font-size:1rem;letter-spacing:.05em}
+.ham{
+  background:none;border:none;color:var(--white);
+  width:32px;height:32px;display:flex;flex-direction:column;
+  justify-content:center;gap:5px;padding:4px;cursor:pointer;
+}
+.ham span{display:block;width:100%;height:1.5px;background:var(--white);transition:transform .3s,opacity .3s}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mob-menu{
+  display:none;position:fixed;top:56px;left:0;right:0;bottom:0;
+  background:var(--bg);z-index:250;
+  flex-direction:column;align-items:center;justify-content:center;gap:40px;
+}
+.mob-menu.open{display:flex}
+.mob-menu a{
+  font-family:var(--font-mono);font-size:.85rem;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--gray3);transition:color .2s;
+}
+.mob-menu a:hover,.mob-menu a.active{color:var(--white)}
+
+/* LAYOUT */
+.main{margin-left:var(--sidebar-w)}
+.datebar{
+  font-family:var(--font-mono);font-size:.65rem;letter-spacing:.3em;
+  color:var(--gray3);padding:18px 60px;border-bottom:1px solid var(--border);
+}
+
+/* HERO */
+#home{
+  min-height:100vh;padding:80px 60px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.hero-name{font-family:var(--font-display);font-weight:900;line-height:.88;text-transform:uppercase}
+.hero-name .first{
+  font-size:clamp(72px,11vw,160px);color:var(--white);display:block;
+  animation:slideUp .8s cubic-bezier(.16,1,.3,1) both;
+}
+.hero-name .last{
+  font-size:clamp(56px,9vw,130px);color:var(--gray);display:block;
+  animation:slideUp .85s .1s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:translateY(0)}}
+.hero-meta{display:flex;gap:60px;margin-top:60px;flex-wrap:wrap;animation:fadeIn .8s .4s both}
+.hero-meta-item label{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.3em;
+  color:var(--gray3);display:block;margin-bottom:8px;
+}
+.hero-meta-item span{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.15em;color:var(--white)}
+.hero-btns{display:flex;gap:16px;margin-top:50px;flex-wrap:wrap;animation:fadeIn .8s .6s both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.btn{
+  font-family:var(--font-mono);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  padding:16px 28px;border:1px solid var(--white);background:transparent;color:var(--white);
+  display:inline-block;transition:background .2s,color .2s;
+}
+.btn:hover{background:var(--white);color:var(--bg)}
+
+/* SECTIONS */
+section{padding:100px 60px;border-top:1px solid var(--border)}
+.section-heading{
+  font-family:var(--font-display);font-weight:900;
+  font-size:clamp(48px,7vw,100px);line-height:.9;text-transform:uppercase;margin-bottom:60px;
+}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-fade{opacity:0;transition:opacity .6s ease}
+.reveal-fade.visible{opacity:1}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:80px}
+.stat-item{border-right:1px solid var(--border);padding:0 40px 0 0;margin-right:40px}
+.stat-item:last-child{border-right:none;margin-right:0}
+.stat-item label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.3em;color:var(--gray3);display:block;margin-bottom:10px}
+.stat-item .num{font-family:var(--font-display);font-weight:900;font-size:clamp(40px,5vw,72px)}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px}
+.about-col h2{
+  font-family:var(--font-display);font-weight:900;
+  font-size:clamp(30px,4vw,56px);text-transform:uppercase;line-height:.95;margin-bottom:50px;
+}
+.edu-entry,.exp-entry{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.edu-entry:last-child,.exp-entry:last-child{border-bottom:none;margin-bottom:0}
+.entry-school{font-family:var(--font-display);font-weight:700;font-size:1.2rem;margin-bottom:6px}
+.entry-degree{font-size:.8rem;color:var(--gray3);margin-bottom:8px}
+.entry-meta{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.2em;color:var(--gray3);margin-bottom:12px}
+.entry-desc{font-size:.78rem;line-height:1.7;color:#bbb}
+.bullet-list{list-style:none;padding:0}
+.bullet-list li{font-size:.78rem;line-height:1.7;color:#bbb;padding-left:14px;position:relative;margin-bottom:4px}
+.bullet-list li::before{content:'—';position:absolute;left:0;color:var(--gray3)}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:48px}
+.skill-cat h3{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.3em;color:var(--gray3);text-transform:uppercase;margin-bottom:24px}
+.skill-tags{display:flex;flex-wrap:wrap;gap:10px}
+.skill-tag{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;
+  padding:8px 14px;border:1px solid var(--border);color:var(--white);
+  transition:background .2s,color .2s;
+}
+.skill-tag:hover{background:var(--white);color:var(--bg)}
+
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+.project-card{
+  border:1px solid var(--border);padding:48px 40px;
+  transition:background .2s,color .2s;margin:-1px 0 0 -1px;
+}
+.project-card:hover{background:var(--white);color:var(--bg)}
+.project-card:hover .project-num,.project-card:hover .project-tech,.project-card:hover .project-desc{color:rgba(0,0,0,.5)}
+.project-num{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.3em;color:var(--gray3);margin-bottom:40px}
+.project-name{font-family:var(--font-display);font-weight:700;font-size:clamp(20px,2.2vw,32px);line-height:1;text-transform:uppercase;margin-bottom:16px}
+.project-desc{font-size:.78rem;line-height:1.7;color:var(--gray3);margin-bottom:24px}
+.project-tech{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.15em;color:var(--gray3)}
+
+/* CERTS */
+.certs-grid{display:grid;grid-template-columns:repeat(2,1fr)}
+.cert-item{
+  border:1px solid var(--border);padding:32px 36px;
+  margin:-1px 0 0 -1px;transition:background .2s,color .2s;
+}
+.cert-item:hover{background:var(--white);color:var(--bg)}
+.cert-item:hover .cert-org{color:rgba(0,0,0,.5)}
+.cert-name{font-family:var(--font-display);font-weight:700;font-size:1.1rem;text-transform:uppercase;margin-bottom:8px}
+.cert-org{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.2em;color:var(--gray3)}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px}
+.contact-tagline{
+  font-family:var(--font-display);font-weight:900;
+  font-size:clamp(32px,4.5vw,64px);line-height:.9;text-transform:uppercase;margin-bottom:48px;
+}
+.contact-links{display:flex;flex-direction:column}
+.contact-link{
+  display:flex;align-items:center;gap:24px;padding:28px 0;
+  border-bottom:1px solid var(--border);font-family:var(--font-mono);
+  font-size:.72rem;letter-spacing:.1em;transition:color .2s;
+}
+.contact-link:first-child{border-top:1px solid var(--border)}
+.contact-link:hover{color:var(--gray3)}
+.cl-label{font-size:.55rem;letter-spacing:.3em;color:var(--gray3);min-width:64px;text-transform:uppercase}
+.contact-right{display:flex;flex-direction:column;justify-content:center;gap:24px}
+.contact-box{
+  border:1px solid var(--border);padding:32px 36px;
+  transition:background .2s,color .2s;display:block;
+}
+.contact-box:hover{background:var(--white);color:var(--bg)}
+.contact-box:hover .cb-label{color:rgba(0,0,0,.5)}
+.cb-label{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.3em;color:var(--gray3);text-transform:uppercase;margin-bottom:8px}
+.cb-val{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.08em}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);padding:32px 60px;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+}
+.ft-left{font-family:var(--font-display);font-weight:900;font-size:1.1rem}
+.ft-mid{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.2em;color:var(--gray3);text-transform:uppercase}
+.ft-right{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.2em;color:var(--gray3);text-align:right;text-transform:uppercase}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .mob-nav{display:flex}
+  .main{margin-left:0;padding-top:56px}
+  #home{padding:40px 24px 60px}
+  .datebar{padding:14px 24px}
+  section{padding:60px 24px}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:32px}
+  .stat-item{border-right:none;padding:0;margin-right:0}
+  .about-grid{grid-template-columns:1fr;gap:48px}
+  .skills-grid{grid-template-columns:1fr;gap:36px}
+  .projects-grid{grid-template-columns:1fr}
+  .project-card{margin:0;border:1px solid var(--border);margin-bottom:-1px}
+  .certs-grid{grid-template-columns:1fr}
+  .cert-item{margin:0;border:1px solid var(--border);margin-bottom:-1px}
+  .contact-grid{grid-template-columns:1fr;gap:48px}
+  footer{grid-template-columns:1fr;gap:16px;text-align:center;padding:32px 24px}
+  .ft-right{text-align:center}
+  .hero-meta{gap:28px}
+}
+@media(max-width:480px){
+  .hero-btns{flex-direction:column}
+  .btn{text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// ── DATA ─────────────────────────────────────────────────────
+const DATA = {
+  name: { first: "SATYA", last: "SAKETH" },
+  role: "SDE / CS Engineer",
+  status: "Open to Opportunities",
+  location: "Warangal, India",
+  university: "SR University",
+  email: "b.satyasaketh@gmail.com",
+  phone: "+91 9515754999",
+  github: "https://github.com/BSatya-Saketh",
+  linkedin: "https://www.linkedin.com/in/satya-saketh-bollepally/",
+    leetcode: "https://leetcode.com/u/B_Satya_Saketh/",
+
+  education: [
+    {
+      school: "SR University, Warangal",
+      degree: "B.Tech — Computer Science & Engineering (International Engineering Program)",
+      meta: "Aug 2023 – May 2027",
+      desc: "CGPA: 9.35 | Courses: Data Structures, OS, Discrete Math, 3-Tier Web Architecture, Computer Networks, DAA, MVC Design Pattern, ORM."
+    }
+  ],
+
+  experience: [
+    {
+      company: "NITW — Research Internship",
+      role: "Anomaly Detection / Federated Learning",
+      meta: "May 2025 – July 2025",
+      bullets: [
+        "Engineered a prototype-based six-layered IoT Architecture: Edge, Gateway, Fog, Proxy, Cloud, Application.",
+        "Developed homogeneous federated learning using a customized Transformer + Autoencoder architecture.",
+        "Focused on data preprocessing, attack classification, and XAI visualization tools."
+      ]
+    },
+    {
+      company: "Bites and Bytes Programming Institute",
+      role: "Teaching Assistant",
+      meta: "April 2024 – July 2024",
+      bullets: [
+        "Mentored students in C, Python, and Java programming fundamentals.",
+        "Provided hands-on debugging support and explained core DSA during lab sessions."
+      ]
+    }
+  ],
+
+  skills: [
+    { category: "Languages",              tags: ["C", "C++", "Java", "Python", "PHP", "JavaScript"] },
+    { category: "AI / ML & Data Science", tags: ["PyTorch", "TensorFlow", "Scikit-Learn", "NumPy", "Pandas", "Matplotlib"] },
+    { category: "Web Development",        tags: ["HTML", "CSS", "Angular.js", "jQuery", "AJAX", "XML"] },
+    { category: "Backend & Frameworks",   tags: ["Spring", "Spring Boot", "Servlets", "JSP", "JavaBeans"] },
+    { category: "Databases & Tools",      tags: ["MySQL", "Oracle", "JDBC", "Git", "GitHub"] },
+    { category: "Networking & Adv. Java", tags: ["Socket Programming", "Multi-threading", "Java Swing", "Java GUI"] }
+  ],
+
+  projects: [
+    {
+      name: "JobTrackerPro",
+      desc: "Full-stack job tracking system with MVC architecture, DAO layer, JDBC PreparedStatement for CRUD, and a responsive CSS dashboard with zero external UI libs.",
+      tech: "Java 25 · Servlets · JDBC · MySQL · HTML · CSS",
+      date: "Mar 2026"
+    },
+    {
+      name: "LeetSync",
+      desc: "Chrome Extension automating LeetCode→GitHub sync via MutationObserver DOM scraping, GitHub REST API via Background Service Workers, auto-generating analytics dashboards.",
+      tech: "JavaScript · Chrome Extensions API · GitHub REST API",
+      date: "Mar 2026"
+    },
+    {
+      name: "Multi-Client Chat System",
+      desc: "Real-time GUI chat system with Java Swing. Multi-threaded socket programming for simultaneous clients, direct messaging, broadcasting, and custom message framing protocol.",
+      tech: "Java 17 · Socket Programming · Java Swing",
+      date: "Nov 2025"
+    },
+    {
+      name: "Anomaly Detection via RL",
+      desc: "Custom RL environment for IoT network traffic. DQN achieved 98% accuracy, 100% recall, 93% F1-score on the WUSTL IIOT 2021 dataset.",
+      tech: "Python · PyTorch · Deep Q-Network",
+      date: "Jan 2026"
+    },
+    {
+      name: "FL-Based IoT Architecture",
+      desc: "Six-layer IoT prototype with federated learning. Integrated Transformer + Autoencoder for distributed anomaly detection across edge-to-cloud layers.",
+      tech: "Python · TensorFlow · Federated Learning",
+      date: "May 2025"
+    }
+  ],
+
+  certifications: [
+    { name: "C Programming",         org: "NPTEL — IIT Kanpur" },
+    { name: "Data Analysis w/ Python", org: "IBM" },
+    { name: "AI for All",            org: "NVIDIA" },
+    { name: "AI Mastermind Workshop", org: "Outkill (2-Day)" }
+  ]
+};
+
+const NAV = [
+  { id: "home",    label: "Home" },
+  { id: "about",   label: "About" },
+  { id: "skills",  label: "Skills" },
+  { id: "projects",label: "Projects" },
+  { id: "contact", label: "Contact" }
+];
+
+// ── HOOKS ─────────────────────────────────────────────────────
+
+function useCustomCursor() {
+  useEffect(() => {
+    const touch   = window.matchMedia("(pointer:coarse)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+    if (touch || reduced) return;
+
+    document.body.classList.add("custom-cursor");
+    const dot  = document.getElementById("cur-dot");
+    const ring = document.getElementById("cur-ring");
+    if (!dot || !ring) return;
+
+    let mx = -200, my = -200, rx = -200, ry = -200, raf;
+    const lerp = (a, b, t) => a + (b - a) * t;
+
+    const onMove = (e) => { mx = e.clientX; my = e.clientY; };
+    const onOver = (e) => {
+      const hit = e.target.closest("a,button,.btn,.project-card,.contact-box,.skill-tag,.cert-item");
+      ring.classList.toggle("hov", !!hit);
+    };
+    const tick = () => {
+      rx = lerp(rx, mx, 0.12);
+      ry = lerp(ry, my, 0.12);
+      dot.style.transform  = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`;
+      ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
+      raf = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseover", onOver);
+    raf = requestAnimationFrame(tick);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseover", onOver);
+      cancelAnimationFrame(raf);
+      document.body.classList.remove("custom-cursor");
+    };
+  }, []);
+}
+
+function useActiveSection() {
+  const [active, setActive] = useState("home");
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach(e => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-40% 0px -55% 0px" }
+    );
+    NAV.forEach(({ id }) => { const el = document.getElementById(id); if (el) obs.observe(el); });
+    return () => obs.disconnect();
+  }, []);
+  return active;
+}
+
+function useLiveDate() {
+  const [date, setDate] = useState("");
+  useEffect(() => {
+    const fmt = () => new Date().toLocaleDateString("en-US", {
+      weekday:"long", year:"numeric", month:"long", day:"numeric"
+    }).toUpperCase();
+    setDate(fmt());
+    const id = setInterval(() => setDate(fmt()), 60000);
+    return () => clearInterval(id);
+  }, []);
+  return date;
+}
+
+function useScrollReveal() {
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); }),
+      { rootMargin: "0px 0px -80px 0px" }
+    );
+    document.querySelectorAll(".reveal,.reveal-fade").forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+}
+
+// ── COMPONENTS ────────────────────────────────────────────────
+
+const Sidebar = ({ active }) => (
+  <nav className="sidebar">
+    <div className="sidebar-logo">SS</div>
+    <div className="sidebar-nav">
+      {NAV.map(({ id, label }) => (
+        <a key={id} href={`#${id}`} className={active === id ? "active" : ""}>{label}</a>
+      ))}
+    </div>
+    <div className="sidebar-btm">©2026</div>
+  </nav>
+);
+
+const MobileNav = ({ active }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <nav className="mob-nav">
+        <div className="mob-logo">SS</div>
+        <button className={`ham${open ? " open" : ""}`} onClick={() => setOpen(o => !o)} aria-label="Menu">
+          <span /><span /><span />
+        </button>
+      </nav>
+      <div className={`mob-menu${open ? " open" : ""}`}>
+        {NAV.map(({ id, label }) => (
+          <a key={id} href={`#${id}`} className={active === id ? "active" : ""} onClick={() => setOpen(false)}>
+            {label}
+          </a>
+        ))}
+      </div>
+    </>
+  );
+};
+
+const Hero = () => (
+  <section id="home">
+    <div className="hero-name">
+      <span className="first">{DATA.name.first}</span>
+      <span className="last">{DATA.name.last}</span>
+    </div>
+    <div className="hero-meta">
+      {[
+        { label:"ROLE",       value: DATA.role },
+        { label:"STATUS",     value: DATA.status },
+        { label:"LOCATION",   value: DATA.location },
+        { label:"UNIVERSITY", value: DATA.university }
+      ].map(({ label, value }) => (
+        <div className="hero-meta-item" key={label}>
+          <label>{label}</label>
+          <span>{value}</span>
+        </div>
+      ))}
+    </div>
+    <div className="hero-btns">
+      <a className="btn" href="#projects">View Work</a>
+      <a className="btn" href="#contact">Get In Touch</a>
+      <a className="btn" href={DATA.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a className="btn" href={DATA.leetcode} target="_blank" rel="noopener noreferrer">LeetCode ↗</a>
+    </div>
+  </section>
+);
+
+const About = () => (
+  <section id="about">
+    <div className="section-heading reveal">About</div>
+    <div className="stats-grid">
+      {[
+        { label:"CGPA",              num:"9.35" },
+        { label:"LeetCode Problems", num:"350+" },
+        { label:"Projects Built",    num:"10+"   },
+        { label:"Internships",       num:"1"    }
+      ].map(({ label, num }) => (
+        <div className="reveal" key={label}>
+          <div className="stat-item">
+            <label>{label}</label>
+            <div className="num">{num}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div className="about-grid">
+      <div className="reveal">
+        <div className="about-col">
+          <h2>Education</h2>
+          {DATA.education.map((e, i) => (
+            <div className="edu-entry" key={i}>
+              <div className="entry-school">{e.school}</div>
+              <div className="entry-degree">{e.degree}</div>
+              <div className="entry-meta">{e.meta}</div>
+              <div className="entry-desc">{e.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="reveal">
+        <div className="about-col">
+          <h2>Experience</h2>
+          {DATA.experience.map((e, i) => (
+            <div className="exp-entry" key={i}>
+              <div className="entry-school">{e.company}</div>
+              <div className="entry-degree">{e.role}</div>
+              <div className="entry-meta">{e.meta}</div>
+              <ul className="bullet-list">
+                {e.bullets.map((b, j) => <li key={j}>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const Skills = () => (
+  <section id="skills">
+    <div className="section-heading reveal">Technical Arsenal</div>
+    <div className="skills-grid">
+      {DATA.skills.map(cat => (
+        <div className="reveal skill-cat" key={cat.category}>
+          <h3>{cat.category}</h3>
+          <div className="skill-tags">
+            {cat.tags.map(tag => <span className="skill-tag" key={tag}>{tag}</span>)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+const Projects = () => (
+  <section id="projects">
+    <div className="section-heading reveal">Selected Projects</div>
+    <div className="projects-grid">
+      {DATA.projects.map((p, i) => (
+        <div className="reveal-fade project-card" key={p.name}>
+          <div className="project-num">{String(i+1).padStart(2,"0")} — {p.date}</div>
+          <div className="project-name">{p.name}</div>
+          <div className="project-desc">{p.desc}</div>
+          <div className="project-tech">{p.tech}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+const Certifications = () => (
+  <section id="certifications">
+    <div className="section-heading reveal">Certifications</div>
+    <div className="certs-grid">
+      {DATA.certifications.map(c => (
+        <div className="reveal-fade cert-item" key={c.name}>
+          <div className="cert-name">{c.name}</div>
+          <div className="cert-org">{c.org}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+const Contact = () => (
+  <section id="contact">
+    <div className="section-heading reveal">Let's Connect</div>
+    <div className="contact-grid">
+      <div className="reveal">
+        <div className="contact-tagline">Open to SDE Roles &amp; Collaborations</div>
+        <div className="contact-links">
+          {[
+            { label:"Email",    value: DATA.email,        href:`mailto:${DATA.email}` },
+            { label:"Phone",    value: DATA.phone,        href:`tel:${DATA.phone}` },
+            { label:"GitHub",   value:"SatyaSaketh",      href: DATA.github },
+            { label:"LinkedIn", value:"in/Satya-Saketh",  href: DATA.linkedin }
+          ].map(({ label, value, href }) => (
+            <a className="contact-link" href={href} key={label} target="_blank" rel="noopener noreferrer">
+              <span className="cl-label">{label}</span>
+              {value}
+            </a>
+          ))}
+        </div>
+      </div>
+      <div className="reveal contact-right">
+        {[
+          { label:"GitHub",   value:"github.com/SatyaSaketh",       href: DATA.github },
+          { label:"LinkedIn", value:"linkedin.com/in/Satya-Saketh", href: DATA.linkedin },
+          { label:"Email",    value: DATA.email,                     href:`mailto:${DATA.email}` }
+        ].map(({ label, value, href }) => (
+          <a className="contact-box" href={href} key={label} target="_blank" rel="noopener noreferrer">
+            <div className="cb-label">{label}</div>
+            <div className="cb-val">{value} ↗</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const Footer = () => (
+  <footer>
+    <div className="ft-left">Satya Saketh</div>
+    <div className="ft-mid">SDE · CS Engineer · Warangal</div>
+    <div className="ft-right">©2026 — All Rights Reserved</div>
+  </footer>
+);
+
+// ── APP ───────────────────────────────────────────────────────
+const App = () => {
+  useCustomCursor();
+  useScrollReveal();
+  const active = useActiveSection();
+  const date   = useLiveDate();
+
+  return (
+    <>
+      <Sidebar active={active} />
+      <MobileNav active={active} />
+      <main className="main">
+        <div className="datebar">{date}</div>
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Certifications />
+        <Contact />
+        <Footer />
+      </main>
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

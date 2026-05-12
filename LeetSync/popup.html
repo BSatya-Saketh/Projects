@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        
+        <div class="header">
+            <h2>🚀 LeetSync</h2>
+            <p>Automated GitHub Portfolio</p>
+        </div>
+
+        <div class="stats-container" style="text-align: center; background: #2d2d2d; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+            <span style="font-size: 12px; color: #888; display: block;">🔥 Total Problems Synced</span>
+            <span id="streakCount" style="font-size: 24px; font-weight: bold; color: #2ea043;">0</span>
+        </div>
+
+        <div class="input-group">
+            <label for="token">GitHub Access Token</label>
+            <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+        </div>
+        
+        <button id="save" class="btn primary">Save Token</button>
+
+        <div class="divider"></div>
+
+        <div>
+            <p class="hint">Browsing an old solved problem?</p>
+            <button id="forceSync" class="btn secondary" style="width: 100%;">Sync Current Problem</button>
+        </div>
+
+        <div id="status"></div>
+
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
